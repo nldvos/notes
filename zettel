@@ -2,74 +2,117 @@
 
 
 ZETTEL_DIR="${HOME}/.zettel"
-ZETTELKAST_DIR="${NOTE_DIR}/zettelkast"
+ZETTELKAST_DIR="${ZETTEL_DIR}/zettelkast"
 
 cmd_usage ()
 {
 	# TODO
-}
-
-cmd_create ()
-{
-	# TODO
+	:
 }
 
 cmd_add ()
 {
-	# TODO
+	$EDITOR $ZETTELKAST_DIR/$(date +%Y%m%d)-$1.md
+}
+
+cmd_edit ()
+{
+	$EDITOR $ZETTELKAST_DIR/$1
+}
+
+cmd_rm ()
+{
+	rm $ZETTELKAST_DIR/$1
 }
 
 cmd_list ()
 {
+	ls $ZETTELKAST_DIR/$1
+}
+
+cmd_find ()
+{
+	find $ZETTELKAST_DIR -name "*$1*" -type f
+}
+
+cmd_grep ()
+{
+	grep $ZETTELKAST_DIR $#
+}
+
+cmd_generate ()
+{
 	# TODO
+	:
+}
+
+# tag subcommand
+cmd_tag ()
+{
+	# TODO
+	:
 }
 
 cmd_tag_create ()
 {
 	# TODO
+	:
 }
 
 cmd_tag_rename ()
 {
 	# TODO
+	:
 }
 
 cmd_tag_list ()
 {
 	# TODO
+	:
 }
 
 cmd_tag_note ()
 {
 	# TODO
+	:
 }
 
-cmd_tag ()
+# link subcommand
+cmd_link ()
 {
 	# TODO
-}
-
-cmd_search ()
-{
-	# TODO
+	:
 }
 
 # main
 echo 'note app' 1>&2
 
-if [ -d $NOTE_DIR ]
-	echo 'create note directory' 1>&2
-	mkdir ${NOTE_DIR}
-endif
-
-if [ -d $NOTE_DIR ]
-	echo 'create zettelkast directory' 1>&2
-	mkdir ${ZETTELKAST_DIR}
-endif
+# if [ -d $NOTE_DIR ]
+# 	echo 'create note directory' 1>&2
+# 	mkdir ${NOTE_DIR}
+# endif
+# 
+# if [ -d $NOTE_DIR ]
+# 	echo 'create zettelkast directory' 1>&2
+# 	mkdir ${ZETTELKAST_DIR}
+# endif
 
 
 # TODO
 #switch
 
-
-
+case "$1" in
+        help|--help) shift;             cmd_usage "$@" ;;
+        version|--version) shift;       cmd_version "$@" ;;
+        show|ls|list) shift;            cmd_show "$@" ;;
+        find|search) shift;             cmd_find "$@" ;;
+        grep) shift;                    cmd_grep "$@" ;;
+        insert|add) shift;              cmd_add "$@" ;;
+        edit) shift;                    cmd_edit "$@" ;;
+        rm) shift;                      cmd_rm "$@" ;;
+        generate) shift;                cmd_generate "$@" ;;
+        tag) shift;                     cmd_tag "$@" ;;
+        link) shift;                    cmd_link "$@" ;;
+        *)                              cmd_usage "$@" ;;
+esac
+exit 0
