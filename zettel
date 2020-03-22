@@ -83,6 +83,13 @@ case "$1" in
         version|--version)
 		echo ${VERSION}
 		;;
+	init)
+		cd ${ZETTEL_DIR}
+		if [ -d .git]
+		then
+			git init
+		fi
+		;;
         ls)
 		shift;
 		cd ${ZETTELKAST_DIR}
@@ -129,6 +136,8 @@ case "$1" in
 		shift;
 		echo "TODO"
 		;;
-        *)                              cmd_usage "$@" ;;
+        *)
+		cmd_usage
+		;;
 esac
 exit 0
