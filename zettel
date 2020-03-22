@@ -3,6 +3,10 @@
 
 ZETTEL_DIR="${HOME}/.zettel"
 ZETTELKAST_DIR="${ZETTEL_DIR}/zettelkast"
+ZETTELKAST_TAGS_DIR="${ZETTEL_DIR}/tags"
+ZETTELKAST_TAGS_DIR="${ZETTEL_DIR}/export"
+ZETTEL_PREFIX=""
+ZETTEL_POSTFIX=".$(date +%Y%m%d)"
 
 cmd_usage ()
 {
@@ -10,78 +14,57 @@ cmd_usage ()
 	:
 }
 
-cmd_add ()
-{
-	$EDITOR $ZETTELKAST_DIR/$(date +%Y%m%d)-$1.md
-}
-
-cmd_edit ()
-{
-	$EDITOR $ZETTELKAST_DIR/$1
-}
-
-cmd_rm ()
-{
-	rm $ZETTELKAST_DIR/$1
-}
-
-cmd_list ()
-{
-	ls $ZETTELKAST_DIR/$1
-}
-
-cmd_find ()
-{
-	find $ZETTELKAST_DIR -name "*$1*" -type f
-}
-
-cmd_grep ()
-{
-	grep $ZETTELKAST_DIR $#
-}
-
-cmd_generate ()
-{
-	# TODO
-	:
-}
 
 # tag subcommand
 cmd_tag ()
 {
-	# TODO
-	:
-}
-
-cmd_tag_create ()
-{
-	# TODO
-	:
-}
-
-cmd_tag_rename ()
-{
-	# TODO
-	:
-}
-
-cmd_tag_list ()
-{
-	# TODO
-	:
-}
-
-cmd_tag_note ()
-{
-	# TODO
-	:
+	case "$1" in
+		help|--help)
+			shift;
+			cmd_usage $@
+			;;
+		create)
+			shift;
+			cd ${ZETTELKAST_TAGS_DIR}
+			mkdir $@
+			cd ${OLDPWD}
+			;;
+		rm)
+			shift;
+			cd ${ZETTELKAST_TAGS_DIR}
+			rm -rf $@
+			cd ${OLDPWD}
+			;;
+		rename)
+			shift;
+			cd ${ZETTELKAST_TAGS_DIR}
+			mv $@
+			cd ${OLDPWD}
+			;;
+		ls)
+			shift;
+			cd ${ZETTELKAST_TAGS_DIR}
+			ls $@
+			cd ${OLDPWD}
+			;;
+		note)
+			shift;
+			cd ${ZETTELKAST_TAGS_DIR}/$2
+			ln -s ${ZETTELKAST_DIR}/$1
+			cd ${OLDPWD}
+			;;
+		*)
+			cmd_usage "$@"
+			;;
+	esac
 }
 
 # link subcommand
 cmd_link ()
 {
-	# TODO
-	:
+	cd ${ZETTELKAST_DIR}
+	echo "related to: [$1]($1)" >> $2
+	cd ${OLDPWD}
 }
 
 # main
@@ -91,7 +74,7 @@ echo 'note app' 1>&2
 # 	echo 'create note directory' 1>&2
 # 	mkdir ${NOTE_DIR}
 # endif
-# 
+#
 # if [ -d $NOTE_DIR ]
 # 	echo 'create zettelkast directory' 1>&2
 # 	mkdir ${ZETTELKAST_DIR}
@@ -102,17 +85,56 @@ echo 'note app' 1>&2
 #switch
 
 case "$1" in
-        help|--help) shift;             cmd_usage "$@" ;;
-        version|--version) shift;       cmd_version "$@" ;;
-        show|ls|list) shift;            cmd_show "$@" ;;
-        find|search) shift;             cmd_find "$@" ;;
-        grep) shift;                    cmd_grep "$@" ;;
-        insert|add) shift;              cmd_add "$@" ;;
-        edit) shift;                    cmd_edit "$@" ;;
-        rm) shift;                      cmd_rm "$@" ;;
-        generate) shift;                cmd_generate "$@" ;;
-        tag) shift;                     cmd_tag "$@" ;;
-        link) shift;                    cmd_link "$@" ;;
+        help|--help)
+		cmd_usage
+		;;
+        version|--version)
+		echo ${VERSION}
+		;;
+        ls)
+		shift;
+		cd ${ZETTELKAST_DIR}
+		ls $@
+		cd ${OLDPWD}
+		;;
+        add)
+		shift;
+		$EDITOR ${ZETTELKAST_DIR}/${PREFIX}$1${POSTFIX}.md
+		;;
+        edit)
+		shift;
+		file="${ZETTELKAST_DIR}/${PREFIX}$1${POSTFIX}.md"
+		if [ -f $file ]
+		then
+			$EDITOR $file
+		else
+			echo "Note does not exist."
+		fi
+		;;
+        rm)
+		shift;
+		rm $ZETTELKAST_DIR/$1
+		;;
+        find)
+		shift;
+		find $ZETTELKAST_DIR -name "*$1*" -type f
+		;;
+        grep) shift;
+		cd ${ZETTELKAST_DIR}
+		grep $@
+		cd ${OLDPWD}
+        tag)
+		shift;
+		cmd_tag "$@";
+		;;
+        link)
+		shift;
+		echo "TODO"
+		;;
+        export)
+		shift;
+		echo "TODO"
+		;;
         *)                              cmd_usage "$@" ;;
 esac
 exit 0
