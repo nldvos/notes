@@ -59,14 +59,6 @@ cmd_tag ()
 	esac
 }
 
-# link subcommand
-cmd_link ()
-{
-	cd ${ZETTELKAST_DIR}
-	echo "related to: [$1]($1)" >> $2
-	cd ${OLDPWD}
-}
-
 # main
 echo 'note app' 1>&2
 
@@ -129,7 +121,9 @@ case "$1" in
 		;;
         link)
 		shift;
-		echo "TODO"
+		cd ${ZETTELKAST_DIR}
+		echo "related to: [$1]($1)" >> $2
+		cd ${OLDPWD}
 		;;
         export)
 		shift;
