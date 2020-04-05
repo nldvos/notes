@@ -98,11 +98,11 @@ case "$1" in
 		;;
         add)
 		shift;
-		$EDITOR ${ZETTELKAST_DIR}/${PREFIX}$1${POSTFIX}.md
+		$EDITOR ${ZETTELKAST_DIR}/${ZETTEL_PREFIX}$1${ZETTEL_POSTFIX}.md
 		;;
         edit)
 		shift;
-		file="${ZETTELKAST_DIR}/${PREFIX}$1${POSTFIX}.md"
+		file="${ZETTELKAST_DIR}/${ZETTEL_PREFIX}$1${ZETTEL_POSTFIX}.md"
 		if [ -f $file ]
 		then
 			$EDITOR $file
@@ -118,10 +118,12 @@ case "$1" in
 		shift;
 		find $ZETTELKAST_DIR -name "*$1*" -type f
 		;;
-        grep) shift;
+        grep)
+		shift;
 		cd ${ZETTELKAST_DIR}
 		grep $@
 		cd ${OLDPWD}
+		;;
         tag)
 		shift;
 		cmd_tag "$@";
