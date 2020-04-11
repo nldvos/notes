@@ -4,7 +4,8 @@
 ZETTEL_DIR="${HOME}/.zettel"
 ZETTELKAST_DIR="${ZETTEL_DIR}/zettelkast"
 ZETTELKAST_TAGS_DIR="${ZETTEL_DIR}/tags"
-ZETTELKAST_TAGS_DIR="${ZETTEL_DIR}/export"
+ZETTELKAST_EXPORT_DIR="${ZETTEL_DIR}/export"
+ZETTELKAST_DATA_DIR="${ZETTEL_DIR}/data"
 ZETTEL_PREFIX=""
 ZETTEL_POSTFIX=".$(date +%Y%m%d)"
 
@@ -14,6 +15,39 @@ cmd_usage ()
 	:
 }
 
+# tag subcommand
+cmd_data ()
+{
+	case "$1" in
+		help|--help)
+			shift;
+			cmd_usage $@
+			;;
+		add)
+			shift;
+			cp $1 ${ZETTELKAST_DATA_DIR}
+			;;
+		rm)
+			shift;
+			cd ${ZETTELKAST_DATA_DIR}
+			rm $@
+			cd ${OLDPWD}
+			;;
+		rename)
+			shift;
+			cd ${ZETTELKAST_TAGS_DIR}
+			mv $@
+			cd ${OLDPWD}
+			;;
+		ls)
+			shift;
+			ls ${ZETTELKAST_DATA_DIR}
+			;;
+		*)
+			cmd_usage "$@"
+			;;
+	esac
+}
 
 # tag subcommand
 cmd_tag ()
@@ -73,9 +107,6 @@ echo 'note app' 1>&2
 # endif
 
 
-# TODO
-#switch
-
 case "$1" in
         help|--help)
 		cmd_usage
@@ -123,6 +154,16 @@ case "$1" in
 		cd ${ZETTELKAST_DIR}
 		grep $@
 		cd ${OLDPWD}
+		;;
+        git)
+		shift;
+		cd ${ZETTEL_DIR}
+		git $@;
+		cd ${OLDPWD}
+		;;
+        data)
+		shift;
+		cmd_data "$@";
 		;;
         tag)
 		shift;
