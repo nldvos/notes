@@ -133,7 +133,7 @@ case "$1" in
 		;;
         edit)
 		shift;
-		file="${ZETTELKAST_DIR}/${ZETTEL_PREFIX}$1${ZETTEL_POSTFIX}.md"
+		file="${ZETTELKAST_DIR}/$1"
 		if [ -f $file ]
 		then
 			$EDITOR $file
