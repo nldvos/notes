@@ -15,7 +15,7 @@ cmd_usage ()
 	:
 }
 
-# tag subcommand
+# data subcommand
 cmd_data ()
 {
 	case "$1" in
@@ -66,7 +66,7 @@ cmd_tag ()
 		rm)
 			shift;
 			cd ${ZETTELKAST_TAGS_DIR}
-			rm -rf $@
+			rm -r $@
 			cd ${OLDPWD}
 			;;
 		rename)
@@ -81,11 +81,15 @@ cmd_tag ()
 			ls $@
 			cd ${OLDPWD}
 			;;
-		note)
+		add)
 			shift;
 			cd ${ZETTELKAST_TAGS_DIR}/$2
 			ln -s ${ZETTELKAST_DIR}/$1
 			cd ${OLDPWD}
+			;;
+		show)
+			shift;
+			find ${ZETTELKAST_TAGS_DIR} -name "$1" -printf "%P\n"  | xargs dirname
 			;;
 		*)
 			cmd_usage "$@"
@@ -94,7 +98,6 @@ cmd_tag ()
 }
 
 # main
-echo 'note app' 1>&2
 
 # if [ -d $NOTE_DIR ]
 # 	echo 'create note directory' 1>&2
